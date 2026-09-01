@@ -12,9 +12,9 @@
 :root {                     /*--nama-variabel memudahkan ganti satu warna aksen 
                             di satu tempat ::root*/
     --ink: #1c1917;     
-    --paper: #faf6f0;
-    --accent: #d95d39;   /*otomatis berlaku di seluruh halaman lewat --accent*/
-    --accent-dark: #a8442a;
+    --paper: #F5F5F5;
+    --accent: #FFCD00;   /*otomatis berlaku di seluruh halaman lewat --accent*/
+    --accent-dark: #F54D42;
     --line: #e3d9c9;
     --text-muted: #6b6459;
     --radius: 4px;
