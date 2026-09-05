@@ -3,17 +3,13 @@
 * {
     margin: 0;  
     padding: 0;
-    box-sizing: border-box; /*padding dan border dihitung 
-                                di dalam lebar elemen ??*/
+    box-sizing: border-box; 
 }
 
-/* Mereset padding/margin bawaan */
-
-:root {                     /*--nama-variabel memudahkan ganti satu warna aksen 
-                            di satu tempat ::root*/
+:root {                     
     --ink: #1c1917;     
     --paper: #F5F5F5;
-    --accent: #FFCD00;   /*otomatis berlaku di seluruh halaman lewat --accent*/
+    --accent: #FFCD00;   
     --accent-dark: #F54D42;
     --line: #e3d9c9;
     --text-muted: #6b6459;
@@ -27,12 +23,11 @@ body {
     line-height: 1.6;
 }
 
-h1, h2, .brand {  /* ganti hanya judul sama logo ke Space Grotesk. link Google Fonts ditambahin di <head> pada bagian HTML*/
+h1, h2, .brand {  
     font-family: "Space Grotesk", -apple-system, sans-serif;
 } 
 
-.container { /* .container untuk membatasi lebar maksimum konten dan menengahkannya. 
-                agar teks tidak melebar penuh mengikuti layar lebar.*/
+.container { 
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 1.5rem;
@@ -45,14 +40,13 @@ h1, h2, .brand {  /* ganti hanya judul sama logo ke Space Grotesk. link Google F
 }
 
 .site-header .container {
-    display: flex;                  /* membuat elemen .brand dan <nav> didalamnya sejajar dengan horizontal secara otomatis.*/
-    justify-content: space-between; /*justify-content: space-between mendorong keduanya ke ujung kiri dan kanan*/
-    align-items: center;            /*align-items: center menengahkan secara vertikal*/
-    padding: 1.25rem 1.5rem;        /*gap: 2rem memberi jarak antar link navigasi tanpa perlu margin manual di tiap link.*/
+    display: flex;                  
+    justify-content: space-between; 
+    align-items: center;            
+    padding: 1.25rem 1.5rem;        
 }
 
-.brand {                /*.brand di sini sengaja dibiarkan sebagai teks polos. di-style dengan font-yang sudah kita atur lewat h1, 
-                        .brand sebelumnya, plus text-decoration: none supaya tidak digarisbawahi seperti link biasa.*/
+.brand {                
     font-size: 1.3rem;
     font-weight: 700;
     color: var(--ink);
@@ -198,7 +192,7 @@ h1, h2, .brand {  /* ganti hanya judul sama logo ke Space Grotesk. link Google F
 .experience-list {
     display: flex;
     flex-direction: column;
-    gap: 32px; /* Jarak/space antar experience */
+    gap: 32px; 
 }
 
 .experience-item {
@@ -209,7 +203,7 @@ h1, h2, .brand {  /* ganti hanya judul sama logo ke Space Grotesk. link Google F
 }
 
 .experience-description {
-    flex: 1; /* Biar deskripsinya bisa memanjang memenuhi sisi kiri */
+    flex: 1; 
     text-align: justify;
 }
 
@@ -239,10 +233,10 @@ h1, h2, .brand {  /* ganti hanya judul sama logo ke Space Grotesk. link Google F
     transition: color 0.3s ease-in;
 }
 
-/* Teks di dalam box berubah warna saat box di-hover */
+
 .experience-item:hover h3, 
 .experience-item:hover .experience-date p {
-    color: #FFCD00; /* Warna aksen teal/biru yang keren. Ganti ke warna pilihanmu! */
+    color: #FFCD00; 
 }
 
 
@@ -264,12 +258,12 @@ h1, h2, .brand {  /* ganti hanya judul sama logo ke Space Grotesk. link Google F
     }
 
     .experience-item {
-        flex-direction: column; /* Ubah arah susunan jadi atas-bawah */
-        gap: 8px; /* Kecilkan jarak antar teks dan tanggal */
+        flex-direction: column;
+        gap: 8px; 
     }
     
     .experience-date {
-        text-align: left; /* Kembalikan rata kiri untuk mobile */
+        text-align: left; 
         font-size: 0.9em;
         order: -1; 
     }
