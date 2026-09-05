@@ -27,13 +27,13 @@ body {
     line-height: 1.6;
 }
 
-h1, .brand {  /* ganti hanya judul sama logo ke Space Grotesk. link Google Fonts ditambahin di <head> pada bagian HTML*/
+h1, h2, .brand {  /* ganti hanya judul sama logo ke Space Grotesk. link Google Fonts ditambahin di <head> pada bagian HTML*/
     font-family: "Space Grotesk", -apple-system, sans-serif;
 } 
 
 .container { /* .container untuk membatasi lebar maksimum konten dan menengahkannya. 
                 agar teks tidak melebar penuh mengikuti layar lebar.*/
-    max-width: 960px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 1.5rem;
 }
@@ -190,6 +190,62 @@ h1, .brand {  /* ganti hanya judul sama logo ke Space Grotesk. link Google Fonts
     border-top: 1px solid var(--line);
 }
 
+.experience-title h2{
+    font-size: clamp(1.5rem, 4vw, 3rem);
+    padding-bottom: 15px;
+}
+
+.experience-list {
+    display: flex;
+    flex-direction: column;
+    gap: 32px; /* Jarak/space antar experience */
+}
+
+.experience-item {
+    display: flex; /* Bikin elemen di dalamnya jadi sejajar horizontal */
+    justify-content: space-between; /* Dorong elemen pertama ke kiri, elemen kedua ke kanan */
+    align-items: flex-start; /* Sejajarkan posisinya dari atas */
+    gap: 360px; /* Memberi jarak aman antara teks deskripsi dan tanggal agar tidak nabrak */
+}
+
+.experience-description {
+    flex: 1; /* Biar deskripsinya bisa memanjang memenuhi sisi kiri */
+    text-align: justify;
+}
+
+.experience-description h3 {
+    margin-top: 0;
+}
+
+.experience-description p,
+.experience-date p {
+    margin: 0;
+}
+
+.experience {
+    max-width: 1200px;
+    margin: 24px auto;
+    padding-bottom: 80px;
+    background-color: #f8f9fa; 
+    padding: 24px;
+    border-radius: 12px;
+
+    border: 1px solid #eeeeee;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); 
+}
+
+.experience-item h3,
+.experience-item .experience-date p {
+    transition: color 0.3s ease-in;
+}
+
+/* Teks di dalam box berubah warna saat box di-hover */
+.experience-item:hover h3, 
+.experience-item:hover .experience-date p {
+    color: #FFCD00; /* Warna aksen teal/biru yang keren. Ganti ke warna pilihanmu! */
+}
+
+
 @media (max-width: 600px) {
     .hero-grid {
         grid-template-columns: 1fr;
@@ -205,5 +261,16 @@ h1, .brand {  /* ganti hanya judul sama logo ke Space Grotesk. link Google Fonts
 
     .social-links {
         justify-content: flex-start;
+    }
+
+    .experience-item {
+        flex-direction: column; /* Ubah arah susunan jadi atas-bawah */
+        gap: 8px; /* Kecilkan jarak antar teks dan tanggal */
+    }
+    
+    .experience-date {
+        text-align: left; /* Kembalikan rata kiri untuk mobile */
+        font-size: 0.9em;
+        order: -1; 
     }
 }
