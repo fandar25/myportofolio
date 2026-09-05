@@ -202,10 +202,10 @@ h1, h2, .brand {  /* ganti hanya judul sama logo ke Space Grotesk. link Google F
 }
 
 .experience-item {
-    display: flex; /* Bikin elemen di dalamnya jadi sejajar horizontal */
-    justify-content: space-between; /* Dorong elemen pertama ke kiri, elemen kedua ke kanan */
-    align-items: flex-start; /* Sejajarkan posisinya dari atas */
-    gap: 360px; /* Memberi jarak aman antara teks deskripsi dan tanggal agar tidak nabrak */
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-start; 
+    gap: 80px; 
 }
 
 .experience-description {
