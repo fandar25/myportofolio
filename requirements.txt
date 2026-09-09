@@ -1,7 +1,7 @@
-django
+django == 5.0
 gunicorn
 whitenoise
 psycopg2-binary
 requests
 urllib3
-python-dotenv
+python-dotenv   
