@@ -20,8 +20,33 @@ class Experience(models.Model):
     ended_at = models.DateTimeField(blank=True, null=True)
     def __str__(self):
         return self.title
-    
+
     @property
     def is_ongoing(self):
         return self.ended_at is None
+
+class Education(models.Model):
+    EDUCATION_CHOICES = [
+        ('primary', 'Primary School'),
+        ('junior-high', 'Junior High School'),
+        ('high', 'High School'),
+        ('college', 'University'),
+    ]
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    category = models.CharField(max_length=20, choices=EDUCATION_CHOICES, default='college')
+    thumbnail = models.URLField(blank=True, null=True)
+    started_at = models.DateTimeField(auto_now_add=True)
+    ended_at = models.DateTimeField(blank=True, null=True)
+    def __str__(self):
+        return self.title
+
+    @property
+    def is_ongoing(self):
+        return self.ended_at is None        
+
+
+
 # Create your models here.
