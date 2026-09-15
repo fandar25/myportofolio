@@ -108,7 +108,7 @@ else:
     }
 
 # gunakan https:// untuk trailing urlnya
-CSRF_TRUSTED_ORIGINS = ["https://muhammad-gathfaan-myportofolio1.pws.cs.ui.ac.id/"]
+CSRF_TRUSTED_ORIGINS = ["https://muhammad-gathfaan-myportofolio1.pws.cs.ui.ac.id"]
 
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
