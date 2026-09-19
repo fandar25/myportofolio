@@ -1,6 +1,15 @@
-from django.forms import ModelForm, TextInput, Textarea, URLInput, DateInput
+from django.forms import ModelForm, Select, TextInput, Textarea, URLInput, DateInput
 
-from main.models import Education
+from main.models import Education, Experience
+
+CATEGORY_CHOICES = [
+    ('internship', 'Internship'),
+    ('research', 'Research'),
+    ('volunteer', 'Volunteer'),
+    ('part-time', 'Part-Time'),
+    ('full-time', 'Full-Time'),
+    ('freelance', 'Freelance'),
+]
 
 class EducationForm(ModelForm):
     class Meta:
@@ -32,6 +41,61 @@ class EducationForm(ModelForm):
             "category": TextInput(
                 attrs={
                     "placeholder": "HIGH SCHOOL, UNDERGRADUATE",
+                }
+            ),
+            "thumbnail": URLInput(
+                attrs={
+                    "placeholder": "https://pws.cs.ui.ac.id/web/makara.png",
+                }
+            ),
+            "started_at": DateInput(
+                format="%Y-%m-%d",
+                attrs={
+                    "type" : "date",
+                    "placeholder": "YYYY-MM-DD",
+                }
+            ),
+            "ended_at": DateInput(
+                format="%Y-%m-%d",
+                attrs={
+                    "type" : "date",
+                    "placeholder": "YYYY-MM-DD",
+                }
+            ),
+        }
+
+
+class ExperienceForm(ModelForm):
+    class Meta:
+        model = Experience
+        fields = "__all__"
+
+        labels = {
+            "title": "Nama Pengalaman",
+            "description": "Deskripsi Pengalaman",
+            "category": "Kategori Pengalaman",
+            "thumbnail": "URL Gambar Pengalaman",
+            "started_at": "Tanggal mulai",
+            "ended_at": "Tanggal akhir",
+        }
+
+        widgets = {
+            "title": TextInput(
+                attrs={
+                    "placeholder": "Nama Pengalaman",
+                    "maxlength": 255,
+                }
+            ),
+            "description": Textarea(
+                attrs={
+                    "placeholder": "Ceritakan pengalamanmu",
+                    "rows": 3,
+                }
+            ),
+            "category": Select(
+                choices=CATEGORY_CHOICES,
+                attrs={
+                    "class": "form-control",
                 }
             ),
             "thumbnail": URLInput(
