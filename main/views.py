@@ -10,7 +10,7 @@ from django.shortcuts import redirect, render
 from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
 import datetime
 
@@ -185,7 +185,7 @@ def logout_user(request):
     return response
 
 @login_required(login_url="/login/")
-def toggle_star(request, experience_id):
+def toggle_star_experience(request, experience_id):
     experience = get_object_or_404(Experience, pk=experience_id)
 
     if request.method == "POST":
@@ -196,3 +196,29 @@ def toggle_star(request, experience_id):
 
     return redirect("main:show_experience")
 
+@login_required(login_url="/login/")
+def toggle_star_education(request, education_id):
+    education = get_object_or_404(Education, pk=education_id)
+
+    if request.method == "POST":
+        if request.user in education.starred_by.all():
+            education.starred_by.remove(request.user)
+        else:
+            education.starred_by.add(request.user)
+
+    return redirect("main:show_education")
+
+@login_required(login_url="/login/")
+@permission_required("main.change_education")
+def edit_education(request, education_id):
+    education = get_object_or_404(Education, pk=education_id)
+
+    if request.method == "POST":
+        form = EducationForm(request.POST, instance=education)
+        if form.is_valid():
+            form.save()
+            return redirect("main:show_education")
+    else:
+        form = EducationForm(instance=education)
+
+    return render(request, "education_edit.html", {'form' : form, 'name' : "Muhammad Gathfaan Nur Aziz Suhendar", 'education' : education})
