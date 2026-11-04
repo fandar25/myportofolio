@@ -1,8 +1,8 @@
 from django.shortcuts import render
 
-from main.forms import EducationForm, ExperienceForm
-from main.models import Experience, Education
-
+from main.forms import EducationForm, ExperienceForm, ProjectForm
+from main.models import Experience, Education, Project
+from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
@@ -55,6 +55,7 @@ def get_experience_json(request):
                 "ended_at": experience.ended_at,
                 "is_starred": is_starred,
                 "starred_by_names": starred_by_names,
+                "star_count" : starred_users.count(),
             }
         })
 
@@ -107,10 +108,15 @@ def show_education(request):
     title_query = request.GET.get("title", "").strip()
     form = EducationForm()
 
+    educations = Education.objects.prefetch_related("starred_by").all()
+    if title_query:
+        educations = educations.filter(title__icontains=title_query)
+
     context = {
         "name": "Muhammad Gathfaan Nur Aziz Suhendar",
         "title_query": title_query,
-        'form': form,
+        "form": form,
+        "educations": educations,
     }
     return render(request, "education.html", context)
 
@@ -156,6 +162,7 @@ def get_education_json(request):
                 "ended_at": education.ended_at,
                 "is_starred": is_starred,
                 "starred_by_names": starred_by_names,
+                "star_count" : starred_users.count(),
             }
         })
 
@@ -281,6 +288,107 @@ def create_experience_ajax(request):
         experience = form.save()
         return JsonResponse(
             {"message": "Proyek berhasil ditambahkan.", "pk": str(experience.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
+
+@login_required(login_url="/login/")
+def create_project(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
+    form = ProjectForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Proyek baru berhasil ditambahkan!")
+        return redirect("main:show_projects")
+
+    context = {
+        "name": "Gathfaan",
+        "form": form,
+    }
+    return render(request, "projects_form.html", context)
+
+
+def show_projects(request):
+    title_query = request.GET.get("title", "").strip()
+
+    context = {
+        "name": "Gathfaan",
+        "title_query": title_query,
+        "form": ProjectForm(),
+    }
+    return render(request, "project.html", context)
+
+def get_projects_json(request):
+    title_query = request.GET.get("title", "").strip()
+    projects = Project.objects.prefetch_related('starred_by').all()
+
+    if title_query:
+        projects = projects.filter(title__icontains=title_query)
+
+    # Konstruksi data JSON secara manual agar bisa menyisipkan logika Star
+    data = []
+    for project in projects:
+        starred_users = project.starred_by.all()
+        is_starred = request.user in starred_users if request.user.is_authenticated else False
+        starred_by_names = ", ".join([u.username for u in starred_users])
+
+        data.append({
+            "pk": str(project.id),
+            "fields": {
+                "title": project.title,
+                "description": project.description,
+                "tech_stack": project.tech_stack,
+                "project_url": project.project_url,
+                "project_image_url": project.project_image_url,
+                "star_count": starred_users.count(),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
+
+    return JsonResponse(data, safe=False)
+
+def delete_project(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+
+    if request.method == "POST":
+        project.delete()
+        messages.success(request, "Project berhasil dihapus!")
+        return redirect("main:show_projects")
+
+    return redirect("main:show_projects")
+
+@login_required(login_url="/login/")
+def toggle_star_project(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+
+    if request.method == "POST":
+        # Kalau akun ini sudah pernah memberi star, batalkan star-nya.
+        # Kalau belum, tambahkan star.
+        if request.user in project.starred_by.all():
+            project.starred_by.remove(request.user)
+        else:
+            project.starred_by.add(request.user)
+
+    return redirect("main:show_projects")
+
+@require_POST
+def create_project_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan proyek."},
+            status=403,
+        )
+
+    form = ProjectForm(request.POST)
+    if form.is_valid():
+        project = form.save()
+        return JsonResponse(
+            {"message": "Proyek berhasil ditambahkan.", "pk": str(project.id)},
             status=201,
         )
 

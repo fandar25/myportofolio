@@ -22,3 +22,11 @@ urlpatterns = [
     path("", include("main.urls")),
 ]
 
+from django.urls import include, path
+
+# Append after your existing urlpatterns definition.
+urlpatterns += [
+    path("api/v1/", include("main.api_urls")),
+    path("api-auth/", include("rest_framework.urls")),
+]
+
