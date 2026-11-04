@@ -47,33 +47,6 @@
 
                 <!-- experience Grid -->
                 <div id="grid" class="experience-grid experience-grid hide"></div>
-
-                <div class="experience-grid experience-grid">
-                    {% for experience in experience_list %}
-                        <article class="experience-card">
-                            {% if experience.thumbnail %}
-                                <div class="image-container">
-                                    <img src="{{ experience.thumbnail }}"
-                                         alt="Gambar {{ experience.title }}"
-                                         class="photo-logo">
-                                </div>
-                            {% endif %}
-                            <div class="experience-content-wrapper">
-                                <span class="experience-category">{{ experience.category }}</span>
-                                <h2>{{ experience.title }}</h2>
-                                <p class="experience-description">{{ experience.description }}</p>
-                            </div>
-                            <div class="experience-card-actions">
-                                <div class="experience-actions">
-                                    {% include "components/experience_star.html" with experience=experience%}
-                                    {% if user.is_superuser %}
-                                        {% include "components/experience_delete_modal.html" with experience=experience %}
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </article>
-                    {% endfor %}
-                </div>
             </div>
         </section>
     </main>
@@ -124,7 +97,7 @@
         articleElement.className = 'experience-card';
 
         const imageHtml = experience.thumbnail 
-            ? `<img src="${escapeHtml(experience.thumbnail)}" alt="Gambar ${escapeHtml(experience.title)}" class="experience-image">`
+            ? `<img src="${escapeHtml(experience.thumbnail)}" alt="Gambar ${escapeHtml(experience.title)}" class="photo-logo">`
             : '';
 
         // Dummy UUID digunakan untuk digantikan oleh ID asli dari data JSON
@@ -148,7 +121,7 @@
 
         // Komponen card
         const completeCardHtml = `
-            ${imageHtml}
+            <div class="image-container">${imageHtml}</div>
             <h2>${escapeHtml(experience.title)}</h2>
             <span class="experience-category">${escapeHtml(experience.category)}</span>
             <p class="experience-description">${escapeHtml(experience.description)}</p>

@@ -41,45 +41,46 @@
                 </div>
 
                 <!-- Empty State -->
-                <div id="empty" class="empty-state hide">
-                    <p>Belum ada pendidikan yang ditambahkan atau ditemukan.</p>
+                <div id="empty" class="empty-state{% if educations %} hide{% endif %}">
+                    <p>Belum ada pendidikan yang ditambahkan.</p>
                 </div>
 
                 <!-- education Grid -->
-                <div id="grid" class="experience-grid education-grid hide"></div>
-
-                <div class="experience-grid education-grid">
-                    {% for education in education_list %}
-                        <article class="experience-card">
-                            {% if education.thumbnail %}
-                                <div class="image-container">
-                                    <img src="{{ education.thumbnail }}"
-                                         alt="Gambar {{ education.title }}"
-                                         class="photo-logo">
-                                </div>
-                            {% endif %}
-                            <div class="education-content-wrapper">
-                                <span class="experience-category">{{ education.category }}</span>
-                                <h2>{{ education.title }}</h2>
-                                <p class="experience-description">{{ education.description }}</p>
+                <div id="grid" class="experience-grid education-grid{% if not educations %} hide{% endif %}">
+                {% for education in educations %}
+                    <article class="experience-card">
+                        <div class="image-container">
+                        {% if education.thumbnail %}
+                            <img src="{{ education.thumbnail }}" alt="Gambar {{ education.title }}" class="photo-logo">
+                        {% endif %}
+                        </div>
+                        <h2>{{ education.title }}</h2>
+                        <span class="experience-category">{{ education.category | capfirst }}</span>
+                        {% if education.ended_at %}
+                        <span class="education-status">Selesai</span>
+                        {% else %}
+                        <span class="education-status">Sedang berlangsung</span>
+                        {% endif %}
+                        <p class="experience-description">{{ education.description }}</p>
+                        <div class="education-card-actions">
+                            <div class="education-actions">
+                                <form method="post" action="{% url 'main:toggle_star_education' education.id %}" class="star-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="button button-star">
+                                        <span aria-hidden="true">★</span> Star
+                                        <span class="star-count">{{ education.starred_by.count }}</span>
+                                    </button>
+                                </form>
+                                {% if user.is_superuser %}
+                                <form method="post" action="{% url 'main:delete_education' education.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="button button-danger" onclick="return confirm('Yakin ingin menghapus education ini?');">Hapus</button>
+                                </form>
+                                {% endif %}
                             </div>
-                            <div class="education-card-actions">
-                                <div class="education-actions">
-                                    {% include "components/education_star.html" with education=education %}
-                                    {% if perms.main.change_education %}
-                                    <a href="{% url 'main:edit_education' education.id %}"
-                                        class="button education-add-button">
-                                        <span aria-hidden="true">Edit</span>
-                                        Pendidikan
-                                    </a>
-                                    {% endif %}
-                                    {% if user.is_superuser %}
-                                        {% include "components/education_delete_modal.html" with education=education %}
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </article>
-                    {% endfor %}
+                        </div>
+                    </article>
+                {% endfor %}
                 </div>
             </div>
         </section>
@@ -132,7 +133,7 @@
         articleElement.className = 'experience-card';
 
         const imageHtml = education.thumbnail 
-            ? `<img src="${escapeHtml(education.thumbnail)}" alt="Gambar ${escapeHtml(education.title)}" class="education-image">`
+            ? `<img src="${escapeHtml(education.thumbnail)}" alt="Gambar ${escapeHtml(education.title)}" class="photo-logo">`
             : '';
 
         // Dummy UUID digunakan untuk digantikan oleh ID asli dari data JSON
@@ -148,6 +149,10 @@
             </form>`
             : '';
 
+        const statusHtml = education.ended_at
+            ? '<span class="education-status">Selesai</span>'
+            : '';
+
         const isStarredClass = education.is_starred ? " is-starred" : "";
         const starText = education.is_starred ? "Unstar" : "Star";
         const starTitle = education.star_count > 0 
@@ -156,9 +161,10 @@
 
         // Komponen card
         const completeCardHtml = `
-            ${imageHtml}
+            <div class="image-container">${imageHtml}</div>
             <h2>${escapeHtml(education.title)}</h2>
             <span class="experience-category">${escapeHtml(education.category)}</span>
+            ${statusHtml}
             <p class="experience-description">${escapeHtml(education.description)}</p>
             <div class="education-card-actions">
                 <div class="education-actions">
@@ -295,11 +301,6 @@
         event.preventDefault();
         clearTimeout(searchDebounceTimer);
         searchEducations();
-    });
-
-    // Jalankan fetch awal saat halaman baru dimuat
-    document.addEventListener('DOMContentLoaded', () => {
-        fetchEducations();
     });
 
     </script>
