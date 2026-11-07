@@ -44,7 +44,7 @@ class Education(models.Model):
         User, related_name="starred_education", blank=True 
     )
     def __str__(self): 
-        return self.title
+        return self.title 
 
     @property
     def is_ongoing(self):
